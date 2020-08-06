@@ -1,0 +1,121 @@
+REPL
+  $> ghci
+  $> stack ghci
+
+
+  Prelude> :load test.hs
+  Prelude> sayHello "Haskell"
+  Hello, Haskell!
+  Prelude>
+
+  :m to return to Prelude
+
+􏰋􏰥 􏰮􏰔􏰦 􏰓􏰗􏰕 􏰙􏰕􏰖􏰙􏰩 􏰛􏰘􏰨􏰟􏰝􏰙 􏰙􏰼􏰦􏰗􏰖􏰘􏰔􏰕􏰛 􏰗􏰖 􏰖􏰣􏰙 􏰟􏰩􏰔􏰨􏰟􏰖 􏰗􏰕􏰚 􏰠􏰙􏰖 􏰖􏰣􏰙 􏰙􏰳􏰯 􏰟􏰙􏰓􏰖􏰙􏰚 􏰩􏰙􏰛􏰦􏰝􏰖􏰛
+Everything in Haskell is an expression or declaration. Expressions may be values, combinations of values, and/or functions applied to values. Expressions evaluate to a result
+
+
+expressions:
+1
+1+1
+"Icarus"
+
+1 + 1 is a reducible expression
+
+
+As in the lambda calculus, all functions in Haskell take one argument and return one result. The way to think of this is that, in Haskell, when it seems we are passing multiple arguments to a function, we are actually applying a series of nested functions, each to one argument. This is called currying
+
+
+functions lowercase letters
+
+camelCase
+
+variables lowercase != single letters
+
+--------
+triple x = x * 3
+
+*Main> triple 2 + 2
+8
+*Main> triple (2 + 2)
+12
+
+parentheses matter, first one is evaluating the first argument to :triple then evaluating + 2 to the return value
+
+(triple 2) + 2
+
+second example is evaluating the parentheses first then passing that as the argument
+
+triple 4
+
+This happens due to reduction
+--------
+
+
+Exercises: Comprehension Check
+
+1. add let to beginning
+2. timesPi x = x * pi
+
+
+
+
+All operators are functions; not all functions are operators
+
+
+you can use infix operators in prefix fashion by wrapping them in parentheses:
+
+(+) 100 100
+
+
+Exercises: Parentheses and Association
+
+1. parentheses would change result
+2. parentheses would NOT change result
+3. parentheses would change result
+
+
+
+
+Module names are capitalized
+
+Indentation is important
+
+start at left most margin
+
+align definitions and declarations
+
+
+
+Exercises: Heal the Sick
+
+1. area x = 3.14 * (x * x)
+2. double x = b * 2
+3. x = 7
+   y = 10
+   f = x+y
+
+
+arithmetic modulo 12
+mod gives remainder of a modular division - like 12-hour clock
+
+
+$ - dollar operator
+will allow everything to the right of it to be evaluated first
+
+
+f $ a = f a
+
+(2^) (2 + 2)
+
+(2^) $ 2 + 2
+
+$ replaces the parentheses
+
+Some Haskellers find parentheses more readable than the dollar sign, but it’s too common in idiomatic Haskell code for you to not at least be familiar with it.
+
+
+
+
+When you see let followed by in, you’re looking at a let expression
+
+Exercises: Rewrite with where clauses
