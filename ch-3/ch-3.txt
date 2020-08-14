@@ -1,0 +1,44 @@
+Exercises: Syntax Errors
+
+1. needs parentheses
+  (++) [1, 2, 3] [4, 5, 6]
+
+2. will compile
+  '<3' ++ ' Haskell'
+
+3. will compile
+  concat ["<3", " Haskell"]
+
+
+
+(:) operator, called cons builds a list
+
+
+Chapter Exercises
+
+Reading syntax
+
+1
+a. concat [[1, 2, 3], [4, 5, 6]]
+b. (++) [1, 2, 3] [4, 5, 6]
+c. (++) "hello" " world"
+d. ["hello" ++ " world"]
+e. "hello" !! 4
+f. take 4 "lovely"
+h. take 3 "awesome"
+
+2. 
+a - d
+b - c 
+c - e 
+d - a 
+e - b 
+
+Building functions
+
+tail "Hello World"
+drop 1 "Hello World"
+
+a. "Curry is awesome" ++ "!"
+b. "Curry is awesome" !! 4
+c. drop 9 "Curry is awesome!"
