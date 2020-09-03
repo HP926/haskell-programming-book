@@ -1,0 +1,372 @@
+Types
+
+you cannot create untyped data
+
+5.2
+Type systems in logic and mathematics have been designed to 
+impose constraints that enforce correctness
+
+A type system defines the associations between different parts of a program 
+and checks that all the parts fit together in a logically consistent, provably correct way
+
+typing is static
+
+
+5.3 How to read type signatures
+
+```
+:type 13
+```
+
+he compiler gives it the type with the broadest 
+applicability (most polymorphic) and says it’s a constrained polymorphic
+
+:type not
+
+The arrow, (->), is the type constructor for functions in Haskell
+
+the (->) type constructor takes arguments and has no data constructors:
+
+The thing on the right of the -> is the constructor
+
+```
+fst :: (a, b) -> a
+          [1] [2] [3]
+```
+
+
+1. The first parameter of fst has the type (a, b). 
+   Note that the tuple type itself (,) takes two arguments 𝑎 and 𝑏.
+2. The function type, (->), has two parameters. One is (a, b) and one is the result 𝑎.
+3. The result of the function, which has type 𝑎. It’s the same 𝑎 that was in the tuple (a, b).
+
+Typeclass-constrained type variables
+
+```
+(+) :: Num a => a -> a -> a
+[1]      [2]      [3]     [4]
+```
+1. name of function
+2. signature with type of a 
+3. arguments must be type of a(Num)
+4. return will be type of a(Num)
+
+```
+(Num a, Num b) => a -> b -> b
+```
+
+ signature with multiple typeclass constraints 
+
+
+```
+(Ord a, Num a) => a -> a -> Ordering
+```
+
+both of the constraints are on the one variable 𝑎 — that is, 𝑎 must be a type that implements both Ord and Num
+
+Exercises: Type Matching
+
+not :: Bool -> Bool
+length :: [a] -> Int
+concat :: [[a]] -> [a]
+head :: :: [a] -> a
+(<) :: Ord a => a -> a -> Bool
+
+
+5.4 Currying
+
+all functions in Haskell take one argument and return one result
+
+Each arrow in a type signature represents one argument and one result
+
+```
+map :: (a -> b) -> [a] -> [b]
+```
+
+ parentheses, is not to control precedence or order of evaluation; 
+ it only serves to group the parameters into argument and result, 
+ since there can only be one argument and one result per arrow.
+
+
+When there are “two arguments” in Haskell, we apply our function to an argument, 
+just like when we apply a lambda expression to an argument, and then return a 
+result that is a function and needs to be applied to a second argument.
+
+Partial application
+
+Haskell is curried by default, but you can uncurry functions
+
+Uncurry- ing means un-nesting the functions and 
+replacing the two functions with a tuple of two values
+   
+   ```
+   Num a => a -> a -> a to Num a => (a, a) -> a
+   ```
+
+takes two arguments, returns one result
+
+• Uncurried functions: One function, many arguments
+• Curried functions: Many functions, one argument apiece
+
+
+Sectioning
+
+specifically refers to partial application of infix operators
+
+use "undefined" to bind the signature to
+
+```
+myfunc :: a -> a -> a -> a->
+myfunc f = undefined
+```
+
+Exercises: Type Arguments
+
+1. If the type off is a -> a -> a -> a, 
+and the type of 𝑥 is Char then the type off x is
+
+a) Char -> Char -> Char
+
+2. If the type of g is a -> b -> c -> b,
+then the type of g 0 'c' "woot" is
+
+d) Char
+
+3. If the type of h is (Num a, Num b) => a -> b -> b, then the type of h 1.0 2 is:
+
+d) Num b => b
+
+Note that because the type variables 𝑎 and 𝑏 are different, the compiler must assume that the types could be different.
+
+4. If the type of h is (Num a, Num b) => a -> b -> b, then the type of h 1 (5.5 :: Double) is:
+
+c) Double
+
+5. If the type of jackal is (Ord a, Eq b) => a -> b -> a, then the type of jackal "keyboard" "has the word jackal in it" is:
+
+a) [Char]
+
+6. If the type of jackal is (Ord a, Eq b) => a -> b -> a, then the type of jackal "keyboard" is:
+
+e) Eq b => b -> [Char]
+
+7. If the type of kessel is (Ord a, Num b) => a -> b -> a, then the type of kessel 1 2 is:
+
+d) (Num a, Ord a) => a
+
+If the type of kessel is (Ord a, Num b) => a -> b -> a, then the type of kessel 1 (2 :: Integer) is:
+
+a) (Num a, Ord a) => a
+
+If the type of kessel is (Ord a, Num b) => a -> b -> a, then the type of kessel (1 :: Integer) 2 is:
+
+c) Integer
+
+5.5 Polymorphism
+
+‘polymorphic’ means “made of many forms.”
+monomorphic “made of one form.”
+
+Haskell, polymorphism divides into two categories: 
+parametric polymorphism 
+constrained polymorphism
+
+Recall that when you see a lowercase name in a type signature, it is a type variable and 
+polymorphic (like 𝑎, 𝑡, etc). If the type is capitalized, it is a specific, 
+concrete type such as Int, Bool, etc
+
+ A subclass cannot override the methods of its superclass.
+
+  function is polymorphic when its type signature has variables that can represent more than one type
+
+Exercises: Parametricity
+
+1. Nothing
+
+2. 
+func1 :: a -> a -> a
+func1 a b = a
+
+func2 :: a -> a -> a
+func2 a b = b
+
+3.
+func3 :: a -> b -> b
+func3 x y = y 
+
+Polymorphic constants
+
+```
+ Prelude> :t (-10) + 6.3
+(-10) + 6.3 :: Fractional a => a
+ Prelude> :t (-10)
+(-10) :: Num a => a
+```
+
+We see that the type of (-10) is given maximum polymorphism 
+by only being an instance of the Num typeclass, which could be any type of number
+
+Working around constraints
+
+5.6 Type inference
+
+Type inference is an algorithm for determining the types of expressions
+
+
+Exercises: Apply Yourself
+
+1
+(++) :: [a] -> [a] -> [a]
+myConcat x = x ++ " yo"
+
+(++) :: [Char] -> [Char] -> [Char]
+
+2
+(*) :: Num a => a -> a -> a
+myMult x = (x / 3) * 5
+
+(*) :: Fractional a => a -> a -> a
+
+3.
+take :: Int -> [a] -> [a]
+myTake x = take x "hey you"
+
+take :: Int -> [Char] -> [Char]
+
+4
+(>) :: Ord a => a -> a -> Bool
+myCom x = x > (length [1..10])
+
+(>) :: Int -> Int -> Bool
+
+5. 
+(<) :: Ord a => a -> a -> Bool
+myAlph x = x < 'z'
+
+(<) :: Char -> Char -> Bool
+
+
+5.7 Asserting types for declarations
+
+```
+-- type declaration
+triple :: Integer -> Integer
+
+-- function declaration
+triple x = x * 3
+```
+
+
+5.8 Chapter Exercises
+
+1. A value of type [a] is
+
+c) a list whose elements are all of some type 𝑎
+
+2. A function of type [[a]] -> [a] could
+
+a) take a list of strings as an argument
+
+3. A function of type [a] -> Int -> a
+
+b) returns one element of type 𝑎 from a list
+
+4. A function of type (a, b) -> a
+
+c) takes a tuple argument and returns the first value
+
+Determine the type
+
+a) (* 9) 6
+
+Num a => a
+
+b) head [(0, "doge"), (1, "kitteh")]
+
+Num a => (a, [Char])
+
+c) head [(0 :: Integer , "doge"), (1, "kitteh")]
+
+(Integer, [Char])
+
+d) if False then True else False
+
+False :: Bool
+
+e) length [1, 2, 3, 4, 5]
+
+Int
+
+f) (length [1, 2, 3, 4]) > (length "TACOCAT")
+
+False :: Bool
+
+Given a type, write the function
+
+1.
+i :: a -> a
+i a = a
+
+2
+c :: a -> b -> a
+c a b = a
+
+3.
+c'' :: b -> a -> b
+c' a b = b
+
+4
+c' :: a -> b -> b
+c' a b = b
+
+5
+r :: [a] -> [a]
+r = tail 
+
+6
+co :: (b -> c) -> (a -> b) -> a -> c
+co bc ab a = bc $ ab $ a
+
+Type-Kwon-Do
+
+1
+f :: Int -> String
+f = undefined
+
+g :: String -> Char
+g = undefined
+
+h :: Int -> Char
+h i = g $ f i
+
+2.
+data A
+data B
+data C
+
+q :: A -> B
+q = undefined
+
+w :: B -> C
+w = undefined
+
+e :: A -> C
+e a = w $ q a
+
+3
+data X
+data Y
+data Z
+
+xz :: X -> Z
+xz = undefined
+
+yz :: Y -> Z
+yz = undefined
+
+xform :: (X, Y) -> (Z, Z)
+xform (x, y) = (xz x, yz y)
+
+4
+munge :: (x -> y) -> (y -> (w, z)) -> x -> w
+munge xy ywz x = fst $ ywz $ xy x
