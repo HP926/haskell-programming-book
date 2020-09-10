@@ -1,0 +1,335 @@
+Typeclasses - interfaces
+
+6.2 What are typeclasses?
+
+Typeclasses and types in Haskell are, in a sense, opposites
+
+ think of typeclasses as being like interfaces to 
+ data that can work across multiple datatypes
+
+
+6.3 Back to Bool
+
+instance Bounded Bool – Bounded for types that have an upper and lower bound
+instance Enum Bool – Enum for things that can be enumerated
+instance Eq Bool – Eq for things that can be tested for equality
+instance Read Bool – Read parses strings into things. Don’t use it. No seriously, don’t.
+instance Show Bool – Show renders things into strings.
+
+
+
+Typeclasses are sets of Types 
+
+Types are sets of values
+
+Type Variable a 
+
+Integer - 3, 8
+Num - Integer, Float
+
+
+
+Bool
+  data Bool = False | True
+
+Typeclasses have a hierarchy of sorts
+
+6.4 Eq
+
+Eq type signature
+  (==) :: a -> a -> Bool
+  (/=) :: a -> a -> Bool
+   
+equality and non equality
+
+
+(==) :: Eq a => a -> a -> Bool 
+(/=) :: Eq a => a -> a -> Bool
+
+Given these types, we know that they can be used for any type 𝑎 which implements the Eq typeclass
+
+type of 𝑎 is usually set by the leftmost occurrence and can’t change in the signature
+
+Typeclass instances we can magically derive are Eq, Ord, Enum, Bounded, Read, and Show, though there are some constraints on deriving some of these
+
+6.5 Writing typeclass instances
+
+partial function - A partial function is 
+                  one that doesn’t handle all the possible 
+                  cases, so there are possible scenarios in which we haven’t defined any way for 
+                  the code to evaluate
+
+```
+Prelude> :set -Wall
+```
+-- partial function warnings
+
+instance Eq Trivial where 
+-- [1]   [2] [3]     [4]
+
+Trivial' == Trivial' = True 
+-- [5]   [6]    [7]     [8]
+
+instance Eq Trivial where
+(==) Trivial' Trivial' = True
+--[ 9 ]
+
+
+
+6.6 Num
+
+Integral
+  means that any type that implements Integral 
+  must already have instances for Real and Enum typeclasses
+
+  divMod
+    the function returns a tuple containing the result of integral division and modulo
+
+Fractional
+  Num is a superclass of Fractional
+
+6.7 Type-defaulting typeclasses
+
+default Num Integer
+default Real Integer
+default Enum Integer
+default Integral Integer
+default Fractional Double
+default RealFrac Double
+default Floating Double
+default RealFloat Double
+
+6.8 Ord
+  covers the types of things that can be put in order
+
+Ord requires Eq and its methods
+
+
+Ord instances
+
+You can’t have an Ord instance unless you also have an Eq instance
+
+Ord instances agree with your Eq instances
+
+In general, your Ord instance should be written such that, 
+when compare x y returns LT, then compare y x returns GT
+
+Eq is a superclass of Ord.
+
+Will They Work?
+1. max (length [1, 2, 3]) (length [8, 9, 10, 11, 12]) works
+2. compare (3 * 4) (3 * 5) works
+3. compare "Julie" True cant compare [Char] to Bool
+4. (5 + 3) > (3 + 6) works
+
+6.9 Enum
+  similar to Ord but is slightly different
+
+
+6.10 Show
+
+Show is a typeclass that provides for the creating of human-readable 
+string representations of structured data. GHCi uses Show to create 
+String values it can print in the terminal.
+
+expressly for human readability
+
+```
+Prelude> :t print
+print :: Show a => a -> IO ()
+```
+side effect, a potentially observable 
+result apart from the value the expression evaluates to
+
+an I/O action is an action that, when performed, has side effects, 
+including reading from input and 
+printing to the screen and will contain a return value
+
+Working with Show
+
+6.11 Read
+
+no way guaranteed that the String will be a valid representation of an Integer value
+
+6.12 Instances are dispatched by type
+
+typeclasses are dispatched by type
+
+• a typeclass defines a set of functions and/or values;
+• types have instances of that typeclass;
+• the instances specify the ways that type uses the functions of the typeclass.
+
+
+Don’t use typeclasses to define default values
+
+6.13 Gimme more operations
+
+```
+Ord Int => Int -> Int -> Int
+```
+
+Int implements Ord, therefore Ord is redundent
+
+A concrete type always implies the typeclasses that are provided for it
+
+avoiding concrete types
+
+6.14 Chapter Exercises
+
+1. The Eq class
+
+c) makes equality tests possible
+
+2. The typeclass Ord
+
+b) is a subclass of Eq
+
+3. Suppose the typeclass Ord has an operator >. What is the type of >?
+
+a) Ord a => a -> a -> Bool
+
+4. Inx = divMod 16 12
+
+c) the type of 𝑥 is a tuple
+
+5. The typeclass Integral includes
+a) Int and Integer numbers
+
+1. Does the following code typecheck? If not, why not?
+
+Person needs deriving Show
+
+2. Does the following typecheck? If not, why not?
+
+Mood deriving (Show, Eq)
+
+
+3. If you were able to get settleDown to typecheck:
+  a) What values are acceptable inputs to that function?
+     Blah and Woot
+  b) What will happen if you try to run settleDown 9? Why?
+    No instance for (Num Mood) arising from the literal ‘9’
+  c) What will happen if you try to run Blah > Woot? Why?
+    No instance for (Ord Mood) arising from a use of ‘>’
+
+4. Does the following typecheck? If not, why not?
+  Yes. s1 :: Object -> Sentence and s2 :: Sentence
+
+
+Given a datatype declaration, what can we do?
+
+1. phew = Papu "chases" True
+  Papu needs Rocks and Yeah arguments   -   phew = Papu (Rocks "chases") (Yeah True)
+
+2. truth = Papu (Rocks "chomskydoz") (Yeah True)
+
+  works Papu (Rocks "chomskydoz") (Yeah True)
+
+3. equalityForall :: Papu -> Papu -> Bool 
+   equalityForall p p' = p == p'
+
+  Works
+
+4. comparePapus :: Papu -> Papu -> Bool 
+  comparePapus p p' = p > p'
+
+  Does not work need derive Eq
+
+
+Match the types
+
+a) i :: Num a => a
+   i = 1
+
+b) i :: a
+
+Wont work with out  Num a  typeclass constraints
+
+2. 
+a) f :: Float 
+   f = 1.0
+
+b) f :: Num a => a
+
+Wont work 1.0 is a fractional 
+
+
+
+3
+a) f :: Float 
+   f = 1.0
+
+b) f :: Fractional a => a
+
+works, float is a fractional
+
+4.
+a) f :: Float 
+   f = 1.0
+
+b) f :: RealFrac a => a
+
+works. RealFrac has (Real a, Fractional a) constraints
+
+5.
+a)freud:: a -> a
+  freud x = x
+
+b) freud :: Ord a => a -> a
+
+works. adding constraint
+
+6
+
+a) freud' : :a -> a 
+   freud' x = x
+
+b) freud' :: Int -> Int
+
+works. adding constraint
+
+7
+a) myX = 1 : :Int
+
+   sigmund :: Int -> Int 
+   sigmund x = myX
+
+b) sigmund :: a -> a
+
+wont work, myX has a type constraint
+
+8
+a) myX = 1 :: Int
+
+  sigmund' :: Int -> Int 
+  sigmund' x = myX
+
+b) sigmund' :: Num a => a -> a
+
+Wont work myX has an Int type constraint
+
+9. 
+a) jung :: Ord a => [a] -> a
+   jung xs = head (sort xs) 
+   
+   b) jung :: [Int] -> Int
+
+Works, Int has an instance of Ord.
+
+10. 
+a) young :: [Char] -> Char
+   young xs = head (sort xs)
+
+b) young :: Ord a => [a] -> a
+
+Works, [Char] == Ord a => [a]
+
+Type-Kwon-Do Two: Electric Typealoo
+
+1
+chk :: Eq b => (a -> b) -> a -> b -> Bool 
+chk func a b = func a == b
+
+2
+arith :: Num b => (a -> b) -> Integer -> a -> b
+arith func int a = (func a) + (fromInteger int)
