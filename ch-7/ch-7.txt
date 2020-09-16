@@ -16,21 +16,20 @@ Setting parameters
 
 Binding variables to values
 
-```
-addOne :: Integer -> Integer 
-addOne x = x + 1
-```
+
+  addOne :: Integer -> Integer 
+  addOne x = x + 1
+
 
  let expressions to declare and bind variables
 
-```
-bindExp :: Integer -> String 
-bindExp x =
+
+  bindExp :: Integer -> String 
+  bindExp x =
     let 
         y = 5
     in
         "the integer was: " ++ show x ++ " and y was: " ++ show y
-```
 
 
 Lexical scoping means that resolving the value for a named 
