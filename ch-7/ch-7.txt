@@ -1,0 +1,364 @@
+7.1 Make it func-y
+
+A function is an instruction for producing an output from an input, 
+or argument. Functions are applied to arguments which binds their parameters to values. 
+The fully applied function with its arguments is then evaluated to produce the output 
+or result
+
+7.2 Arguments and parameters
+
+all functions take one argument and return one result
+
+first-class value - value that can be used as an argument to a function
+
+Setting parameters
+
+
+Binding variables to values
+
+```
+addOne :: Integer -> Integer 
+addOne x = x + 1
+```
+
+ let expressions to declare and bind variables
+
+```
+bindExp :: Integer -> String 
+bindExp x =
+    let 
+        y = 5
+    in
+        "the integer was: " ++ show x ++ " and y was: " ++ show y
+```
+
+
+Lexical scoping means that resolving the value for a named 
+entity depends on the location in the code and the lexical context,
+
+
+7.3 Anonymous functions
+
+anonymous functions - “with- out a name”
+
+Use ":{" and ":}" in repl to multiline functions
+
+```
+Prelude> :{
+*Main| let trip :: Integer -> Integer
+*Main|     trip = \x -> x*3
+*Main| :}
+Prelude>
+```
+
+wrap anonymous function in parentheses
+
+```
+(\x -> x * 3) 5
+```
+
+Exercises: Grab Bag
+
+1. Which (two or more) of the following are equivalent?
+
+a) mTh x y z = x * y * z
+b) mTh x y = (\z -> x) * y * z
+c) mTh x = (\y -> (\z -> x)) * y * z
+d) mTh = (\x -> (\y -> (\z -> x))) * y * z
+
+Are they all equivalent? I think so, lambda calculus
+
+2. The type of mTh (above) isNum a => a -> a -> a -> a. Which is the type of mTh 3?
+
+D, Num a => a -> a -> a
+
+3. Next, we’ll practice writing anonymous lambda syntax.
+For example, one could rewrite:
+
+addOne x = x + 1
+Into:
+addOne = \x -> x + 1
+
+a)
+addOneIfOdd n = 
+  case odd n of 
+    True -> f n
+    False -> n
+  where f n = n + 1
+
+
+  where f = (\n+ n) + 1 
+
+b) addFive x y = (if x > y then y else x) + 5
+
+  addFive = (\x -> (\y -> (if x > y then y else x) + 5))
+
+c) Rewrite the following so that it doesn’t use anonymous
+lambda syntax:
+
+mflip f = \x -> \y -> f y x
+
+mflip f x y = f y x
+
+
+most often use this syntax when you’re passing
+a function in as an argument to a higher-order function
+
+7.4 Pattern matching
+
+Pattern matching is a way of matching values against 
+patterns and, where appropriate, binding variables to successful matches
+
+pattern matching matches on any and all data constructors
+
+
+Patterns are matched against values, or data constructors, not types
+
+Pattern matching proceeds from left to right and outside to inside
+
+The order of pattern matches matters!
+
+```
+Prelude> :set -Wall
+```
+
+Pattern matching against data constructors
+see wherePenguinsLive.hs
+
+Pattern matching tuples
+
+:browse to see a list of the type signatures and function
+
+Exercises: Variety Pack
+
+1. Given the following declarations
+k (x, y) = x
+k1 = k ((4-1), 10)
+k2 = k ("three", (1 + 2)) k3 = k (3, True)
+
+a) What is the type of k?
+  k :: (a, b) -> a
+b) Whatisthetypeofk2? Isitthesametypeask1ork3?
+  k2 :: [Char]. no, k1, k3 :: Num a => a
+c) Of k1, k2, k3, which will return the number 3 as the result?
+  k3
+
+2. Fill in the definition of the following function:
+
+-- Remember: Tuples have the
+             same syntax for their
+--           type constructors and
+--           their data constructors.
+f :: (a, b, c)
+  -> (d, e, f)
+  -> ((a, d), (c, f))
+f = undefined
+
+f (a, b, c) (d, e, f) = ((a, d), (c, f))
+
+7.5 Case expressions
+
+
+Case expressions are a way, similar in some respects to 
+if-then-else, of making a function return a different 
+result based on different inputs
+
+Exercises: Case Practice
+see exercises.hs
+
+7.6 Higher-order functions
+
+functions that accept functions as arguments
+
+```
+-- (a -> b -> c) is function
+flip :: (a -> b -> c) -> b -> a -> c
+```
+
+(a -> b -> c) is function
+
+Exercises: Artful Dodgy
+
+dodgy x y = x + y * 10 
+oneIsOne = dodgy 1 
+oneIsTwo = (flip dodgy) 2
+
+2. dodgy 1 1
+  11
+3. dodgy 2 2
+  22
+4. dodgy 1 2
+  21
+5. dodgy 2 1
+  12
+6. oneIsOne 1
+  11 
+7. oneIsOne 2
+  21
+8. oneIsTwo 1
+  21
+9. oneIsTwo 2
+  22
+10. oneIsOne 3
+  31
+11. oneIsTwo 3
+  23
+
+7.7 Guards
+
+```
+if-then-else
+
+if <condition>
+  then <result if True>
+  else <result if False>
+```
+
+Writing guard blocks
+
+```
+myAbs :: Integer -> Integer 
+myAbs x
+| x < 0 = (-x) 
+| otherwise = x
+```
+
+Exercises: Guard Duty
+
+1. It is probably clear to you why you wouldn’t 
+put an otherwise in your top-most guard, 
+but try it with avgGrade anyway and 
+see what happens. It’ll be more clear 
+if you rewrite it as an otherwise match:
+ | otherwise = 'F'. What happens now if you 
+ pass a 90 as an argument? 75? 60?
+
+moving otherwise to top will cause all grade to = 'F'
+
+2. What happens if you take avgGrade as it is 
+written and reorder the guards? Does 
+it still typecheck and work the same? 
+Try moving | y >= 0.7 = 'C' and passing 
+it the argument 90, which should be an 
+‘A.’ Does it return an ‘A’?
+
+any score above .7 will result in 'C' grade
+due to order of conditions
+
+3. The following function returns
+
+pal xs
+  | xs == reverse xs = True 
+  | otherwise = False
+
+b) `True` when `xs` is a palindrome  
+
+4. What types of arguments can pal take?
+
+Eq a => [a]
+
+5. What is the type of the function pal?
+
+pal :: Eq a => [a] -> Bool
+
+6. The following function returns
+numbers x
+  | x < 0  = -1
+  | x == 0 = 0 
+  | x > 0  = 1
+
+  c) an indication of whether its 
+  argument is a positive or negative 
+  number or zero
+
+7.8 Function composition
+
+ type of higher-order function that 
+ allows us to combine functions such 
+ that the result of applying one function 
+ gets passed to the next function as an 
+ argument
+
+ ```
+ (.) :: (b -> c) -> (a -> b) -> a -> c
+ ```
+
+```
+(f . g) x = f (g x)
+```
+
+```
+-- same function
+
+negate . sum $ [1, 2, 3, 4, 5]
+
+negate (sum [1, 2, 3, 4, 5])
+
+(negate . sum) [1, 2, 3, 4, 5]
+
+```
+
+7.9 Pointfree style
+
+style of composing functions without 
+specifying their arguments
+
+drop the argument altogether
+
+```
+f . g = \x -> f (g x)
+```
+
+7.10 Demonstrating composition
+
+```
+print :: Show a => a -> IO ()
+print a = putStrLn (show a)
+
+-- print pointfree
+print :: Show a => a -> IO () 
+print a = (putStrLn . show) a
+
+-- print pointfree dropping the arg
+print :: Show a => a -> IO ()
+print = putStrLn . show
+```
+
+7.11 Chapter Exercises
+A polymorphic function
+
+1. A polymorphic function
+
+d) may resolve to values of different types, 
+depending on inputs
+
+
+2. Two functions named f and g have types 
+Char -> String and String -> [String] 
+respectively. The composed function 
+g . f has the type
+
+b) Char -> [String]
+
+3. A functionf has the type 
+Ord a => a -> a -> Bool and we apply
+it to one numeric value. 
+What is the type now?
+
+d) (Ord a, Num a) => a -> Bool
+
+4. A function with the type (a -> b) -> c
+
+b) is a higher-order function
+
+5. Given the following definition of f, 
+what is the type of f True?
+
+f :: a -> a
+f x = x
+
+a) f True :: Bool
+
+Let’s write code
+
+-- exercises.hs
