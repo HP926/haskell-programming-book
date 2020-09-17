@@ -1,0 +1,170 @@
+Recursion
+
+ function will continue to call itself and repeat its behavior until some 
+ condition is met to return a result
+
+ Y combinator or fixed-point combinator
+
+ 8.2 Factorial!
+
+ The way we can stop a recursive expression is 
+ by having a base case that stops the 
+ self-application to further arguments
+
+
+ Where function composition as we normally think 
+ of it is static and definite, recursive 
+ compositions are indefinite
+
+```
+-- function composition
+(.) :: (b -> c) -> (a -> b) -> a -> c
+```
+
+Intermission: Exercise
+
+applyTimes 5 (+1) 5
+
+(+1) (applyTimes 4 (+1) 5)
+
+(+1) ((+1) (applyTimes 3 (+1) 5))
+
+(+1) ((+1) ((+1) (applyTimes 2 (+1) 5)))
+
+(+1) ((+1) ((+1) ((+1) (applyTimes 1 (+1) 5))))
+
+(+1) ((+1) ((+1) ((+1) ((+1) (applyTimes 0 (+1) 5)))))
+
+(+1) ((+1) ((+1) ((+1) ((+1) 5))))
+
+(+1) ((+1) ((+1) ((+1) 6)))
+
+(+1) ((+1) ((+1) 7))
+
+(+1) ((+1) 8)
+
+(+1) 9
+
+10
+
+8.3 Bottom
+
+⊥ or bottom is a term used in Haskell to refer 
+to computations that do not successfully result 
+in a value
+
+
+Another example of a bottom 
+would be a partial function
+
+Maybe - used to make partial functions in total
+functions
+
+Maybe datatype can take an argument
+
+8.4 Fibonacci numbers
+see fibonacci.hs 
+
+8.5 Integral division from scratch
+
+common Haskell idiom called a go function
+
+8.6 Chapter Exercises
+
+1. Whatisthetypeof
+[[True, False], [True, True], [False, True]]?
+
+d) [[Bool]]
+
+2. Which of the following has the same 
+type as [[True, False], [True, True], [False, True]]?
+
+b) [[3 == 3], [6 > 5], [3 < 4]]
+
+3. For the following function
+func :: [a] -> [a] -> [a] 
+func x y = x ++ y
+which of the following is true?
+
+d) all of the above
+
+4. For the func code above, which is a valid application 
+of func to both of its arguments?
+
+b) func "Hello" "World"
+
+Reviewing currying
+
+cattyConny :: String -> String -> String 
+cattyConny x y = x ++ " mrow " ++ y
+
+1. What is the value of appedCatty "woohoo!" ? 
+Try to determine the
+answer for yourself, then test in the REPL.
+
+ "woops mrow woohoo!"
+
+2. frappe "1"
+
+"1 mrow haha"
+
+3. frappe (appedCatty "2")
+
+   "woops mrow 2 mrow haha"
+
+4. appedCatty (frappe "blue")
+  
+  "woops mrow blue mrow haha"
+
+5. cattyConny (frappe "pink")
+              (cattyConny "green" (appedCatty "blue"))
+
+  "pink mrow haha mrow green mrow woops mrow blue"
+6. cattyConny (flippy "Pugs" "are") "awesome"
+
+
+  "are mrow Pugs mrow awesome"
+
+Recursion
+
+1. Write out the steps for reducing 
+dividedBy 15 2 to its final answer according 
+to the Haskell code.
+
+dividedBy 15 2
+
+go 15 2 0
+
+go 13 2 1
+
+go 11 2 2
+
+go 9 2 3
+
+go 7 2 4
+
+go 5 2 5
+
+go 3 2 6
+
+go 1 2 7
+
+(7, 1)
+
+2. Write a function that recursively sums all numbers 
+from 1 to n, nbeingtheargument. So that if n was 5,
+you’d add 1 + 2 + 3 + 4 + 5 to get15. 
+The type should be (Eq a, Num a) => a -> a.
+
+sumsN :: (Eq a, Num a) => a -> a
+sumsN a = go a 0 
+  where go sum index
+         | index == a = sum
+         | otherwise = go (sum + index) (index + 1)
+
+3. Write a function that multiplies two integral 
+numbers using recursive summation. 
+The type should be 
+(Integral a) => a -> a -> a.
+
+Fixing dividedBy
