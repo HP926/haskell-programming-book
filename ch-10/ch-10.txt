@@ -1,0 +1,113 @@
+10.1 Folds
+
+```
+foldr :: (a -> b -> b) -> b -> [a] -> b
+
+-- 0 is the accumulator
+foldr (+) 0 [1,2,3,4]
+```
+
+foldr (\elem acc -> <expression>) <start_acc> <list>
+
+```
+count e = foldr (\x acc -> if e == x then acc + 1 else acc) 0
+
+isAll e = foldr (\x -> e == x && acc) True
+```
+foldl (\acc elem -> <expression>) <start_acc> <list>
+```
+foldl (+) 0 [1,2,3]
+
+
+Folds as a general concept are called catamorphisms
+
+
+10.2 Bringing you into the fold
+
+```
+foldr :: (a -> b -> b) -> b -> [a] -> b
+
+map (\x -> x + 1) [1,2,3]
+map (+1) [1,2,3]
+== [2,3,4]
+
+foldr (+) 0 [1,2,3]
+== 6
+```
+
+Where map applies a function to each member 
+of a list and returns a list, a fold replaces 
+the cons constructors with the function and 
+reduces the list.
+
+10.3 Recursive patterns
+
+```
+sum :: [Integer] -> Integer 
+sum [] = 0
+sum (x:xs) = x + sum xs
+
+foldr :: (a -> b -> b) -> b -> [a] -> b 
+foldr f z [] = z
+foldr f z (x:xs) = f x (foldr f z xs)
+
+
+Prelude> sum [1,5,10]
+16
+
+Prelude> foldr (+) 0 [1,5,10]
+16
+
+```
+
+10.4 Fold right
+
+associates to the right - right fold
+
+text rewriting system
+
+foldr (+) 0 [1, 2, 3] 
+Into:
+(+) 1 ((+) 2 ((+) 3 0))
+Into:
+1 + (2 + (3 + 0))
+
+One initially nonobvious aspect of folding 
+is that it happens in two stages, traversal and folding
+
+foldr, the rest of our fold is an argument to the 
+function we’re folding with
+
+
+
+10.5 Fold left
+
+left associative and proceeds in the opposite 
+direction as that of foldr
+
+Scans are similar to folds but return a list of 
+all the intermediate stages
+
+```
+Prelude> foldr (+) 0 [1..5]
+15
+Prelude> scanr (+) 0 [1..5]
+[15,14,12,9,5,0]
+
+
+Prelude> foldl (+) 0 [1..5]
+15
+Prelude> scanl (+) 0 [1..5]
+[0,1,3,6,10,15]
+
+```
+
+Associativity and folding
+
+folding the list into a new list
+
+```
+foldr (:) [] [1..3]
+
+foldl (flip (:)) [] [1..3]
+
