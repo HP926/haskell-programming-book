@@ -4,7 +4,10 @@
 foldr :: (a -> b -> b) -> b -> [a] -> b
 
 -- 0 is the accumulator
-foldr (+) 0 [1,2,3,4]
+foldr (+) 0 [1,2,3]
+
+foldr (+) 0 [1,2,3]
+== 6
 ```
 
 foldr (\elem acc -> <expression>) <start_acc> <list>
@@ -167,3 +170,33 @@ foldl (flip ((++) . show)) "" [1..5]
 f) foldr const 'a' [1..5]
 
 foldr (flip const) 'a' [1..5] == 'a'
+
+Unconditional spine recursion
+
+foldl is that a left fold has the successive 
+steps of the fold as its first argument
+
+const ignores the first argument
+
+foldl is generally inappropriate with lists 
+that are or could be infinite
+
+foldl' == “fold-l-prime” - it forces evaluation of the 
+                          values inside cons cells as it 
+                          traverses the spine, rather than 
+                          accumulating unevaluated expressions 
+                          for each element of the list
+
+
+10.6 How to write fold functions
+
+When we write folds, we begin by thinking about
+ what our start value for the fold is. ( Accumulator)
+
+ ```
+foldr :: (a -> b -> b) -> b -> [a] -> b
+concat $ map (take 3)
+
+ ```
+
+ Exercises: Database Processing
